@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use regex::Regex;
 
 static SUBREDDIT_RE: LazyLock<Regex> =
@@ -9,12 +9,10 @@ static SUBREDDIT_RE: LazyLock<Regex> =
 static USERNAME_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_\-]{3,20}$").unwrap());
 
-static POST_ID_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^[a-z0-9]{1,10}$").unwrap());
+static POST_ID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-z0-9]{1,10}$").unwrap());
 
-static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)reddit\.com/r/([^/]+)/comments/([a-z0-9]+)").unwrap()
-});
+static URL_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?i)reddit\.com/r/([^/]+)/comments/([a-z0-9]+)").unwrap());
 
 static SHORT_URL_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)redd\.it/([a-z0-9]+)").unwrap());

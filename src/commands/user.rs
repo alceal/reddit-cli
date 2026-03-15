@@ -47,10 +47,6 @@ pub async fn execute(
         None
     };
 
-    print_user(
-        &user,
-        posts.as_deref(),
-        comments.as_deref(),
-    );
+    print_user(&user, posts.as_deref(), comments.as_deref());
     Ok(())
 }

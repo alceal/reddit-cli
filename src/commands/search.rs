@@ -24,11 +24,7 @@ pub async fn execute(
         "/search".to_string()
     };
 
-    let restrict_sr = if subreddit.is_some() {
-        "true"
-    } else {
-        "false"
-    };
+    let restrict_sr = if subreddit.is_some() { "true" } else { "false" };
     let limit_str = limit.to_string();
     let params: Vec<(&str, &str)> = vec![
         ("q", query),

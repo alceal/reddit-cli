@@ -2,7 +2,7 @@ use anyhow::Result;
 
 use crate::client::RedditClient;
 use crate::format::print_post_detail;
-use crate::models::{build_comment_tree, FormattedPost, Listing, RawComment, RawPost};
+use crate::models::{FormattedPost, Listing, RawComment, RawPost, build_comment_tree};
 use crate::validation::extract_post_id;
 
 pub async fn execute(

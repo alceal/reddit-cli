@@ -108,15 +108,8 @@ async fn main() {
             limit,
             time,
         } => {
-            commands::search::execute(
-                &client,
-                &query,
-                subreddit.as_deref(),
-                &sort,
-                limit,
-                &time,
-            )
-            .await
+            commands::search::execute(&client, &query, subreddit.as_deref(), &sort, limit, &time)
+                .await
         }
         Commands::Post {
             post_id,

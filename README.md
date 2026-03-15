@@ -1,5 +1,9 @@
 # reddit-cli
 
+[![Crates.io](https://img.shields.io/crates/v/reddit-cli)](https://crates.io/crates/reddit-cli)
+[![License](https://img.shields.io/crates/l/reddit-cli)](LICENSE)
+[![Downloads](https://img.shields.io/crates/d/reddit-cli)](https://crates.io/crates/reddit-cli)
+
 A command-line interface for browsing Reddit, built in Rust. Provides five commands for browsing subreddits, searching posts, reading post details with comment trees, viewing user profiles, and fetching comments.
 
 ## Prerequisites
