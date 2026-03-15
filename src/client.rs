@@ -2,8 +2,8 @@ use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 use base64::Engine;
-use serde::de::DeserializeOwned;
 use serde::Deserialize;
+use serde::de::DeserializeOwned;
 use tokio::sync::Mutex;
 use zeroize::Zeroizing;
 
@@ -67,16 +67,13 @@ impl std::fmt::Debug for RedditClient {
 
 impl RedditClient {
     pub fn new() -> Result<Self> {
-        let client_id =
-            std::env::var("REDDIT_CLIENT_ID").context("REDDIT_CLIENT_ID not set")?;
+        let client_id = std::env::var("REDDIT_CLIENT_ID").context("REDDIT_CLIENT_ID not set")?;
         let client_secret = Zeroizing::new(
             std::env::var("REDDIT_CLIENT_SECRET").context("REDDIT_CLIENT_SECRET not set")?,
         );
-        let username =
-            std::env::var("REDDIT_USERNAME").context("REDDIT_USERNAME not set")?;
-        let password = Zeroizing::new(
-            std::env::var("REDDIT_PASSWORD").context("REDDIT_PASSWORD not set")?,
-        );
+        let username = std::env::var("REDDIT_USERNAME").context("REDDIT_USERNAME not set")?;
+        let password =
+            Zeroizing::new(std::env::var("REDDIT_PASSWORD").context("REDDIT_PASSWORD not set")?);
 
         let sanitized_username = username.replace(['\n', '\r'], "");
         let user_agent = format!("reddit-cli/0.1.0 (by /u/{})", sanitized_username);
@@ -98,14 +95,17 @@ impl RedditClient {
     async fn get_token(&self) -> Result<zeroize::Zeroizing<String>> {
         let mut cache = self.token_cache.lock().await;
 
-        if let Some(ref token) = cache.token {
-            if Instant::now() < cache.expiry {
-                return Ok(token.clone());
-            }
+        if let Some(ref token) = cache.token
+            && Instant::now() < cache.expiry
+        {
+            return Ok(token.clone());
         }
 
-        let auth = base64::engine::general_purpose::STANDARD
-            .encode(format!("{}:{}", self.client_id, self.client_secret.as_str()));
+        let auth = base64::engine::general_purpose::STANDARD.encode(format!(
+            "{}:{}",
+            self.client_id,
+            self.client_secret.as_str()
+        ));
 
         let response = self
             .client
@@ -120,15 +120,12 @@ impl RedditClient {
             .await?;
 
         if !response.status().is_success() {
-            return Err(
-                RedditError::Auth(format!("OAuth error: {}", response.status())).into(),
-            );
+            return Err(RedditError::Auth(format!("OAuth error: {}", response.status())).into());
         }
 
         let text = response.text().await?;
-        let data: TokenResponse = serde_json::from_str(&text).map_err(|_| {
-            RedditError::Auth("Failed to parse token response".into())
-        })?;
+        let data: TokenResponse = serde_json::from_str(&text)
+            .map_err(|_| RedditError::Auth("Failed to parse token response".into()))?;
         let token = zeroize::Zeroizing::new(data.access_token);
         cache.token = Some(token.clone());
         cache.expiry = Instant::now() + Duration::from_secs(data.expires_in.saturating_sub(60));
@@ -181,26 +178,24 @@ impl RedditClient {
         }
 
         const MAX_RESPONSE_SIZE: u64 = 10_485_760;
-        if let Some(content_length) = response.content_length() {
-            if content_length > MAX_RESPONSE_SIZE {
-                return Err(anyhow::anyhow!(
-                    "Response too large: {} bytes (limit: {} bytes)",
-                    content_length,
-                    MAX_RESPONSE_SIZE
-                ));
-            }
+        if let Some(content_length) = response.content_length()
+            && content_length > MAX_RESPONSE_SIZE
+        {
+            return Err(anyhow::anyhow!(
+                "Response too large: {} bytes (limit: {} bytes)",
+                content_length,
+                MAX_RESPONSE_SIZE
+            ));
         }
 
         let text = response.text().await?;
-        serde_json::from_str::<T>(&text).map_err(|e| {
-            anyhow::anyhow!("Failed to parse response: {}", e)
-        })
+        serde_json::from_str::<T>(&text)
+            .map_err(|e| anyhow::anyhow!("Failed to parse response: {}", e))
     }
 
     pub async fn resolve_subreddit(&self, post_id: &str) -> Result<String> {
         let id_param = format!("t3_{}", post_id);
-        let data: Listing<RawPost> =
-            self.get("/api/info", &[("id", id_param.as_str())]).await?;
+        let data: Listing<RawPost> = self.get("/api/info", &[("id", id_param.as_str())]).await?;
 
         let post = data
             .data

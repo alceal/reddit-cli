@@ -235,18 +235,18 @@ fn format_comment(raw: &RawComment, depth: u32, max_depth: u32) -> Option<Format
         replies: None,
     };
 
-    if depth < max_depth {
-        if let Some(ref replies_listing) = raw.replies {
-            let replies: Vec<FormattedComment> = replies_listing
-                .data
-                .children
-                .iter()
-                .filter(|t| t.kind == "t1")
-                .filter_map(|t| format_comment(&t.data, depth + 1, max_depth))
-                .collect();
-            if !replies.is_empty() {
-                comment.replies = Some(replies);
-            }
+    if depth < max_depth
+        && let Some(ref replies_listing) = raw.replies
+    {
+        let replies: Vec<FormattedComment> = replies_listing
+            .data
+            .children
+            .iter()
+            .filter(|t| t.kind == "t1")
+            .filter_map(|t| format_comment(&t.data, depth + 1, max_depth))
+            .collect();
+        if !replies.is_empty() {
+            comment.replies = Some(replies);
         }
     }
 
@@ -255,9 +255,7 @@ fn format_comment(raw: &RawComment, depth: u32, max_depth: u32) -> Option<Format
 
 // Custom deserializer for Reddit's replies field (either "" or a nested Listing)
 
-fn deserialize_replies<'de, D>(
-    deserializer: D,
-) -> Result<Option<Listing<RawComment>>, D::Error>
+fn deserialize_replies<'de, D>(deserializer: D) -> Result<Option<Listing<RawComment>>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {

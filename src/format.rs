@@ -99,7 +99,7 @@ pub fn format_number(n: i64) -> String {
     let bytes = s.as_bytes();
     let mut result = String::new();
     for (i, &b) in bytes.iter().enumerate() {
-        if i > 0 && (bytes.len() - i) % 3 == 0 {
+        if i > 0 && (bytes.len() - i).is_multiple_of(3) {
             result.push(',');
         }
         result.push(b as char);
