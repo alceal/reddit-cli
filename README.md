@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/crates/l/reddit-cli)](LICENSE)
 [![Downloads](https://img.shields.io/crates/d/reddit-cli)](https://crates.io/crates/reddit-cli)
 
-A command-line interface for browsing Reddit, built in Rust. Provides five commands for browsing subreddits, searching posts, reading post details with comment trees, viewing user profiles, and fetching comments.
+A command-line interface for browsing and posting to Reddit, built in Rust. Provides commands for browsing subreddits, searching posts, reading post details with comment trees, viewing user profiles, fetching comments, and submitting text posts.
 
 ## Prerequisites
 
@@ -190,6 +190,29 @@ reddit-cli comments abc123 --sort top --limit 10
 reddit-cli comments "https://www.reddit.com/r/rust/comments/abc123/title/" --sort new
 ```
 
+### Submit a Post
+
+Submit a text post to a subreddit.
+
+```bash
+reddit-cli submit <subreddit> [OPTIONS]
+```
+
+| Option | Short | Default | Description |
+|--------|-------|---------|-------------|
+| `--title` | `-t` | | Post title (required, max 300 characters) |
+| `--body` | `-b` | `""` | Post body text |
+
+**Examples:**
+
+```bash
+# Submit a text post
+reddit-cli submit rust --title "My new project" --body "Check out my new Rust CLI tool..."
+
+# Submit a title-only post
+reddit-cli submit rust --title "Quick question about lifetimes"
+```
+
 ## Output Format
 
 Posts are displayed as a numbered list with metadata:
@@ -232,6 +255,7 @@ src/
     post.rs        -- View post with comments
     user.rs        -- View user profile and activity
     comments.rs    -- View comments from a post
+    submit.rs      -- Submit a text post
 ```
 
 ## License

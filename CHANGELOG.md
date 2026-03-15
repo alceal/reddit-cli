@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] - 2026-03-15
+
+### Added
+- `submit` command to post text submissions to subreddits
+- `post_form` method on RedditClient for POST requests
+
 ## [0.1.1] - 2026-03-15
 
 ### Security
