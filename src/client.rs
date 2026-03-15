@@ -193,52 +193,6 @@ impl RedditClient {
             .map_err(|e| anyhow::anyhow!("Failed to parse response: {}", e))
     }
 
-    pub async fn post_form<T: DeserializeOwned>(
-        &self,
-        endpoint: &str,
-        form: &[(&str, &str)],
-    ) -> Result<T> {
-        let token = self.get_token().await?;
-        let url = format!("https://oauth.reddit.com{}", endpoint);
-
-        let request = self
-            .client
-            .post(&url)
-            .bearer_auth(token.as_str())
-            .form(form)
-            .timeout(Duration::from_secs(10));
-
-        let response = match request.send().await {
-            Ok(r) => r,
-            Err(e) if e.is_timeout() => return Err(RedditError::Timeout.into()),
-            Err(e) => return Err(RedditError::Http(e).into()),
-        };
-
-        let status = response.status();
-        if !status.is_success() {
-            return match status.as_u16() {
-                403 => Err(RedditError::Forbidden.into()),
-                404 => Err(RedditError::NotFound("Resource not found".into()).into()),
-                429 => Err(RedditError::RateLimited.into()),
-                _ => {
-                    let body = match response.bytes().await {
-                        Ok(b) => String::from_utf8_lossy(&b[..b.len().min(1024)]).to_string(),
-                        Err(_) => "(unable to read error body)".to_string(),
-                    };
-                    Err(RedditError::Api {
-                        status: status.as_u16(),
-                        message: body,
-                    }
-                    .into())
-                }
-            };
-        }
-
-        let text = response.text().await?;
-        serde_json::from_str::<T>(&text)
-            .map_err(|e| anyhow::anyhow!("Failed to parse response: {}", e))
-    }
-
     pub async fn resolve_subreddit(&self, post_id: &str) -> Result<String> {
         let id_param = format!("t3_{}", post_id);
         let data: Listing<RawPost> = self.get("/api/info", &[("id", id_param.as_str())]).await?;

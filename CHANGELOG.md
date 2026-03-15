@@ -1,10 +1,13 @@
 # Changelog
 
-## [0.2.0] - 2026-03-15
+## [0.2.1] - 2026-03-15
 
-### Added
-- `submit` command to post text submissions to subreddits
-- `post_form` method on RedditClient for POST requests
+### Removed
+- `submit` command and `post_form` client method
+
+### Changed
+- Centered shields.io badges in README
+- Removed project structure section from README
 
 ## [0.1.1] - 2026-03-15
 

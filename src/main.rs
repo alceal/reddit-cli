@@ -68,17 +68,6 @@ enum Commands {
         #[arg(short, long)]
         comments: bool,
     },
-    /// Submit a text post to a subreddit
-    Submit {
-        /// Subreddit to post to (without r/ prefix)
-        subreddit: String,
-        /// Post title
-        #[arg(short, long)]
-        title: String,
-        /// Post body text
-        #[arg(short, long, default_value = "")]
-        body: String,
-    },
     /// Get comments from a post
     Comments {
         /// Post ID or full Reddit URL
@@ -132,11 +121,6 @@ async fn main() {
             posts,
             comments,
         } => commands::user::execute(&client, &username, posts, comments).await,
-        Commands::Submit {
-            subreddit,
-            title,
-            body,
-        } => commands::submit::execute(&client, &subreddit, &title, &body).await,
         Commands::Comments {
             post_id,
             sort,
