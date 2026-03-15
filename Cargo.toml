@@ -2,6 +2,11 @@
 name = "reddit-cli"
 version = "0.1.0"
 edition = "2024"
+description = "A command-line Reddit client with security hardening"
+license = "MIT"
+repository = "https://github.com/alceal/reddit-cli"
+keywords = ["reddit", "cli", "terminal"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 anyhow = "1"
