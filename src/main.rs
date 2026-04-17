@@ -5,6 +5,24 @@ mod models;
 mod validation;
 
 use clap::{Parser, Subcommand};
+use std::path::PathBuf;
+
+fn load_env() {
+    // CWD .env first (preserves dev workflow), then ~/.config/reddit-cli/.env
+    // as a fallback for globally-installed users. dotenvy does not override
+    // already-set vars, so CWD wins when both files define the same key.
+    dotenvy::dotenv().ok();
+    if let Some(path) = xdg_env_path() {
+        dotenvy::from_path(&path).ok();
+    }
+}
+
+fn xdg_env_path() -> Option<PathBuf> {
+    let base = std::env::var_os("XDG_CONFIG_HOME")
+        .map(PathBuf::from)
+        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))?;
+    Some(base.join("reddit-cli").join(".env"))
+}
 
 #[derive(Parser)]
 #[command(name = "reddit-cli", version, about = "A CLI for browsing Reddit")]
@@ -83,7 +101,7 @@ enum Commands {
 
 #[tokio::main]
 async fn main() {
-    dotenvy::dotenv().ok();
+    load_env();
     let cli = Cli::parse();
 
     let client = match client::RedditClient::new() {
