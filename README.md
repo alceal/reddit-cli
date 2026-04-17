@@ -31,11 +31,26 @@ A command-line interface for browsing Reddit, built in Rust. Provides five comma
 
 ### 2. Configure Credentials
 
+`reddit-cli` loads credentials in this order:
+
+1. Environment variables already set in the shell.
+2. `.env` in the current working directory (handy when running from a clone).
+3. `$XDG_CONFIG_HOME/reddit-cli/.env` (defaults to `~/.config/reddit-cli/.env`) — recommended when installed globally via `cargo install`.
+
+For a global install:
+
+```bash
+mkdir -p ~/.config/reddit-cli
+cp .env.example ~/.config/reddit-cli/.env
+```
+
+For development from a clone:
+
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your credentials:
+Either way, fill in your credentials:
 
 ```
 REDDIT_CLIENT_ID=your_client_id
