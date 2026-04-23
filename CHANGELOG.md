@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-04-23
+
+### Added
+- Load `.env` from `$XDG_CONFIG_HOME/reddit-cli/` (defaults to `~/.config/reddit-cli/`) as a fallback for globally-installed users (#1, thanks @josephyooo)
+- README `cargo install reddit-cli` instructions
+
 ## [0.2.1] - 2026-03-15
 
 ### Removed

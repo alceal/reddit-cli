@@ -59,13 +59,21 @@ REDDIT_USERNAME=your_reddit_username
 REDDIT_PASSWORD=your_reddit_password
 ```
 
-### 3. Build
+### 3. Install
+
+Install from crates.io (recommended):
+
+```bash
+cargo install reddit-cli
+```
+
+Or build from source:
 
 ```bash
 cargo build --release
 ```
 
-The binary will be at `target/release/reddit-cli`.
+When built from source, the binary is at `target/release/reddit-cli`.
 
 ## Usage
 
