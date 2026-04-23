@@ -61,13 +61,19 @@ REDDIT_PASSWORD=your_reddit_password
 
 ### 3. Install
 
-Install from crates.io (recommended):
+**Homebrew (macOS/Linux):**
+
+```bash
+brew install alceal/tap/reddit-cli
+```
+
+**Cargo:**
 
 ```bash
 cargo install reddit-cli
 ```
 
-Or build from source:
+**From source:**
 
 ```bash
 cargo build --release
