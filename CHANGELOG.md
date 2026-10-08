@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.3] - 2026-10-08
+
+### Added
+- Post flair at the end of the metadata line (`| [flair]`) in `browse`, `search`, `post` and `user` output, shown only when the post has one. Flair emoji placeholders (`:name:`) are removed and the text is sanitized like other API fields
+
 ## [0.2.2] - 2026-04-23
 
 ### Added
