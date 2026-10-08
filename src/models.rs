@@ -35,6 +35,7 @@ pub struct RawPost {
     pub selftext: Option<String>,
     pub is_self: bool,
     pub permalink: String,
+    pub link_flair_text: Option<String>,
 }
 
 impl Default for RawPost {
@@ -52,6 +53,7 @@ impl Default for RawPost {
             selftext: None,
             is_self: false,
             permalink: String::new(),
+            link_flair_text: None,
         }
     }
 }
@@ -122,6 +124,7 @@ pub struct FormattedPost {
     pub selftext: Option<String>,
     pub is_self: bool,
     pub permalink: String,
+    pub flair: Option<String>,
 }
 
 #[derive(Debug)]
@@ -176,6 +179,7 @@ impl From<RawPost> for FormattedPost {
             selftext: raw.selftext.filter(|s| !s.is_empty()),
             is_self: raw.is_self,
             permalink: format!("https://reddit.com{}", raw.permalink),
+            flair: raw.link_flair_text.filter(|s| !s.trim().is_empty()),
         }
     }
 }
@@ -268,5 +272,34 @@ where
             .map_err(serde::de::Error::custom)
     } else {
         Ok(None)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn post_from(json: &str) -> FormattedPost {
+        let raw: RawPost = serde_json::from_str(json).unwrap();
+        raw.into()
+    }
+
+    #[test]
+    fn flair_is_read_from_link_flair_text() {
+        let post = post_from(r#"{"title": "t", "link_flair_text": "Meme"}"#);
+        assert_eq!(post.flair.as_deref(), Some("Meme"));
+    }
+
+    #[test]
+    fn missing_null_or_blank_flair_is_none() {
+        assert_eq!(post_from(r#"{"title": "t"}"#).flair, None);
+        assert_eq!(
+            post_from(r#"{"title": "t", "link_flair_text": null}"#).flair,
+            None
+        );
+        assert_eq!(
+            post_from(r#"{"title": "t", "link_flair_text": "  "}"#).flair,
+            None
+        );
     }
 }

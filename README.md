@@ -227,9 +227,12 @@ Posts are displayed as a numbered list with metadata:
 
 ```
 [1] Title of the post
-    r/subreddit | u/author | 1,234 pts (95%) | 56 comments | 2h ago
+    r/subreddit | u/author | 1,234 pts (95%) | 56 comments | 2h ago | [Discussion]
     https://reddit.com/r/subreddit/comments/abc123
 ```
+
+The trailing `[flair]` appears only when the post has a flair. Flair emoji
+placeholders such as `:Doomsday:` are removed from the text.
 
 Comments are displayed as an indented tree:
 
